@@ -34,3 +34,6 @@ yarn-error.log*
 # temporary files
 *_lint_output.txt
 lint_output.txt
+
+# keys
+vps_key*
