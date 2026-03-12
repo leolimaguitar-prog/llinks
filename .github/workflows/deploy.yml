@@ -41,11 +41,11 @@ jobs:
           fi
 
       - name: Deploy para VPS
-        uses: Burnett01/rsync-deployments@7.0.1
+        uses: easingthemes/ssh-deploy@v5.1.0
         with:
-          switches: -avzr --delete
-          path: dist/
-          remote_path: /etc/icontainer/apps/openresty/openresty/www/sites/linkinstagram.leolima.digital/index
-          remote_host: ${{ secrets.VPS_IP }}
-          remote_user: ${{ secrets.VPS_USER }}
-          remote_key: ${{ secrets.VPS_SSH_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          ARGS: "-avzr --delete"
+          SOURCE: "dist/"
+          REMOTE_HOST: ${{ secrets.VPS_IP }}
+          REMOTE_USER: ${{ secrets.VPS_USER }}
+          TARGET: "/etc/icontainer/apps/openresty/openresty/www/sites/linkinstagram.leolima.digital/index/"
