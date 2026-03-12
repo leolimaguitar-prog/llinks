@@ -2,7 +2,7 @@ name: Deploy VPS
 
 on:
   push:
-    branches: [ main ] # Executa toda vez que você der push na branch main
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,6 @@ jobs:
           npm install
           npm run build
         env:
-          # Variáveis do Supabase para o build do Vite
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
@@ -31,7 +30,7 @@ jobs:
         with:
           switches: -avzr --delete
           path: dist/ 
-          remote_path: /var/www/linktree # Caminho na sua VPS
+          remote_path: /var/www/linktree
           remote_host: ${{ secrets.VPS_IP }}
           remote_user: ${{ secrets.VPS_USER }}
           remote_key: ${{ secrets.VPS_SSH_KEY }}
