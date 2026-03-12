@@ -34,9 +34,18 @@ jobs:
               echo "Error: $name secret is not set."
               exit 1
             fi
-            if echo "$value" | grep -q "[[:space:]]"; then
-              echo "Error: $name secret contains whitespace or newlines. Please clean it in GitHub Settings."
-              exit 1
+            # Permite quebras de linha apenas na chave SSH
+            if [ "$name" != "VPS_SSH_KEY" ]; then
+              if echo "$value" | grep -q "[[:space:]]"; then
+                echo "Error: $name secret contains whitespace or newlines. Please clean it in GitHub Settings."
+                exit 1
+              fi
+            else
+              # Para a chave SSH, apenas verifica se há espaços/newlines ANTES ou DEPOIS do bloco BEGIN/END
+              if [[ "$value" =~ ^[[:space:]]+ ]] || [[ "$value" =~ [[:space:]]+$ ]]; then
+                echo "Error: $name secret contains leading or trailing whitespace. Please clean it in GitHub Settings."
+                exit 1
+              fi
             fi
           }
           check_secret "VPS_IP" "${{ secrets.VPS_IP }}"
