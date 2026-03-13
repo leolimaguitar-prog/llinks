@@ -52,6 +52,13 @@ jobs:
           check_secret "VPS_USER" "${{ secrets.VPS_USER }}"
           check_secret "VPS_SSH_KEY" "${{ secrets.VPS_SSH_KEY }}"
 
+      - name: Test Connection
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -o BatchMode=yes -o ConnectTimeout=5 ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} "echo '✅ Connection Successful'" || (echo "❌ SSH Connection failed. Please check VPS_SSH_KEY and authorized_keys on server." && exit 1)
+
       - name: Deploy para VPS
         uses: easingthemes/ssh-deploy@v5.1.0
         with:
@@ -60,4 +67,4 @@ jobs:
           SOURCE: "dist/"
           REMOTE_HOST: ${{ secrets.VPS_IP }}
           REMOTE_USER: ${{ secrets.VPS_USER }}
-          TARGET: "/etc/icontainer/apps/openresty/openresty/www/sites/linkinstagram.leolima.digital/index/"
+          TARGET: "/etc/icontainer/apps/openresty/openresty/www/sites/linkinstagram.leolima.digital/"
